@@ -23,7 +23,7 @@ code{background:#15152b;padding:2px 6px;border-radius:6px}
 const q=new URLSearchParams(location.search),code=q.get('code'),err=q.get('error');
 const box=document.getElementById('box');
 if(err){document.getElementById('h').textContent='Login was not completed';document.getElementById('p').textContent=q.get('error_description')||err;box.textContent=err;document.getElementById('copy').style.display='none';}
-else if(code){box.textContent=code;const b=document.getElementById('back');b.href='http://localhost:4394/?code='+encodeURIComponent(code)+'&state='+encodeURIComponent(q.get('state')||'');b.style.display='inline-block';document.getElementById('p').textContent='Continue to the tool, or copy the code and paste it there.';}
+else if(code){box.textContent=code;const b=document.getElementById('back');b.href='/tiktok/app.html?code='+encodeURIComponent(code)+'&state='+encodeURIComponent(q.get('state')||'');b.style.display='inline-block';document.getElementById('p').textContent='Continue to the tool, or copy the code and paste it there.';}
 else{document.getElementById('h').textContent='Nothing to show';document.getElementById('p').textContent='Open this page from the TikTok login flow.';box.style.display='none';document.getElementById('copy').style.display='none';}
 document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(code);document.getElementById('copy').textContent='Copied ✓';}catch{box.focus();}};
 </script>
