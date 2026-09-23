@@ -17,13 +17,13 @@ code{background:#15152b;padding:2px 6px;border-radius:6px}
 <h1 id="h">Almost done</h1>
 <p class="mut" id="p">Copy the code below and paste it into the Tool.</p>
 <div id="box" style="margin:18px 0;padding:14px 16px;background:#15152b;border-radius:12px;word-break:break-all;font-family:ui-monospace,Menlo,monospace;font-size:15px"></div>
-<button id="copy" style="background:#fe2c55;color:#fff;border:0;border-radius:10px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer">Copy code</button>
+<a id="back" style="display:none;background:#fe2c55;color:#fff;border-radius:10px;padding:12px 18px;font-weight:700;text-decoration:none;margin-right:10px">Continue to Quiz Shorts Publisher</a><button id="copy" style="background:#15152b;color:#fff;border:1px solid #2c2c48;border-radius:10px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer">Copy code</button>
 <p class="mut" style="margin-top:22px;font-size:14px">This page is the login callback for Quiz Shorts Publisher. The code is shown only in your browser and is not sent anywhere from this page. You can close it after copying.</p>
 <script>
 const q=new URLSearchParams(location.search),code=q.get('code'),err=q.get('error');
 const box=document.getElementById('box');
 if(err){document.getElementById('h').textContent='Login was not completed';document.getElementById('p').textContent=q.get('error_description')||err;box.textContent=err;document.getElementById('copy').style.display='none';}
-else if(code){box.textContent=code;}
+else if(code){box.textContent=code;const b=document.getElementById('back');b.href='http://localhost:4394/?code='+encodeURIComponent(code)+'&state='+encodeURIComponent(q.get('state')||'');b.style.display='inline-block';document.getElementById('p').textContent='Continue to the tool, or copy the code and paste it there.';}
 else{document.getElementById('h').textContent='Nothing to show';document.getElementById('p').textContent='Open this page from the TikTok login flow.';box.style.display='none';document.getElementById('copy').style.display='none';}
 document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(code);document.getElementById('copy').textContent='Copied ✓';}catch{box.focus();}};
 </script>
