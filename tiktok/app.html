@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Post to TikTok · Quiz Shorts Publisher</title>
+<style>
+:root{--bg:#0f0f12;--card:#1a1a20;--ink:#f2f2f4;--mut:#9a9aa6;--line:#2c2c36;--acc:#25f4ee;--pink:#fe2c55;--ok:#3ddc84;--warn:#ffb020}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,Inter,Segoe UI,sans-serif}
+header{padding:18px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px}
+header h1{font-size:17px;margin:0}header .sub{color:var(--mut);font-size:13px}
+main{max-width:1080px;margin:0 auto;padding:22px;display:grid;grid-template-columns:320px 1fr;gap:22px}
+@media(max-width:800px){main{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+h2{font-size:14px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;margin:0 0 12px}
+label{display:block;font-weight:600;margin:14px 0 6px}
+input[type=text],textarea,select{width:100%;background:#111116;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit}
+textarea{min-height:110px;resize:vertical}
+.row{display:flex;align-items:center;gap:10px;margin:8px 0}
+.row input[type=checkbox]{width:18px;height:18px}
+.hint{color:var(--mut);font-size:13px}.note{background:#15151c;border:1px dashed var(--line);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--mut);margin-top:10px}
+button{background:var(--pink);color:#fff;border:0;border-radius:10px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer}
+button:disabled{opacity:.4;cursor:not-allowed}button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.creator{display:flex;align-items:center;gap:12px}.creator img{width:44px;height:44px;border-radius:50%;background:#333}
+.creator b{display:block}.creator span{color:var(--mut);font-size:13px}
+.list{display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow:auto}
+.vid{padding:10px 12px;border:1px solid var(--line);border-radius:10px;cursor:pointer}.vid:hover,.vid.sel{border-color:var(--acc)}
+.vid b{display:block;font-size:14px}.vid span{color:var(--mut);font-size:12px}
+video{width:100%;max-height:420px;background:#000;border-radius:12px}
+.status{margin-top:12px;padding:12px;border-radius:10px;background:#15151c;font-size:14px}
+.ok{color:var(--ok)}.err{color:var(--pink)}.warn{color:var(--warn)}
+.tabs{display:flex;gap:8px;margin-bottom:12px}.tabs button{background:transparent;border:1px solid var(--line);color:var(--mut)}.tabs button.on{border-color:var(--acc);color:var(--ink)}
+.sub-opts{margin-left:28px;padding-left:12px;border-left:2px solid var(--line)}
+</style>
+</head>
+<body>
+<header><div><h1>Post to TikTok</h1><div class="sub">Quiz Shorts Publisher · review, then publish a video to your own TikTok account</div></div></header>
+<main>
+  <section class="card">
+    <h2>1 · Account & video</h2>
+    <div class="tabs" id="tabs"></div>
+    <div id="creator" class="creator"><img alt=""><div><b>Not connected</b><span>Connect your TikTok account to continue</span></div></div>
+    <div id="connect" style="display:none;margin-top:12px">
+      <a id="authLink"><button class="ghost" type="button">Log in with TikTok</button></a>
+      <label>Paste the code from the callback page</label>
+      <input type="text" id="code" placeholder="code"><div style="margin-top:8px"><button type="button" id="authBtn" class="ghost">Connect</button></div>
+    </div>
+    <label>Choose a video</label>
+    <div class="list" id="list"></div>
+  </section>
+
+  <section class="card" id="composer">
+    <h2>2 · Review & publish</h2>
+    <video id="preview" controls playsinline></video>
+    <label for="title">Caption</label>
+    <textarea id="title" placeholder="Caption · hashtags are matched automatically"></textarea>
+    <div class="hint"><span id="tlen">0</span>/2200</div>
+
+    <label for="privacy">Who can view this video</label>
+    <select id="privacy"><option value="" disabled selected>Select</option></select>
+
+    <label>Allow users to</label>
+    <div class="row"><input type="checkbox" id="allowComment"><span>Comment</span></div>
+    <div class="row"><input type="checkbox" id="allowDuet"><span>Duet</span></div>
+    <div class="row"><input type="checkbox" id="allowStitch"><span>Stitch</span></div>
+
+    <div class="row" style="margin-top:14px"><input type="checkbox" id="commercial"><b>Disclose video content</b></div>
+    <div class="hint">Turn on to disclose that this video promotes goods or services in exchange for something of value. Your video could promote yourself, a third party, or both.</div>
+    <div class="sub-opts" id="commOpts" style="display:none">
+      <div class="row"><input type="checkbox" id="brandOrganic"><span>Your brand</span></div>
+      <div class="row"><input type="checkbox" id="brandContent"><span>Branded content</span></div>
+      <div class="note" id="commNote"></div>
+    </div>
+
+    <div class="row" style="margin-top:14px"><input type="checkbox" id="aigc" checked><span>AI-generated content label (this video uses an AI voice)</span></div>
+
+    <div class="note" id="consent"></div>
+    <div class="note">Your video will be uploaded to TikTok. It may take a few minutes to process before it appears on your profile.</div>
+    <div style="margin-top:14px;display:flex;gap:10px;align-items:center"><button id="post" disabled>Post to TikTok</button><span class="hint" id="why"></span></div>
+    <div class="status" id="status" style="display:none"></div>
+  </section>
+</main>
+<script>
+const API_BASE='http://localhost:4394';
+const $=s=>document.querySelector(s);
+const MUSIC='https://www.tiktok.com/legal/page/global/music-usage-confirmation/en',BRAND='https://www.tiktok.com/legal/page/global/bc-policy/en';
+let ch='nl',creator=null,sel=null,vids=[];
+const api=(p,o)=>fetch(API_BASE+p,o).then(r=>r.json()).catch(e=>({error:'Cannot reach the local publisher service on '+API_BASE+' — start it with: node tools/tt-review/server.js'}));
+async function loadChannels(){const cs=await api('/api/channels');$('#tabs').innerHTML=cs.map(c=>`<button data-id="${c.id}" class="${c.id===ch?'on':''}">${c.brand}</button>`).join('');document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{ch=b.dataset.id;loadChannels();loadCreator();loadVideos();});}
+async function loadCreator(){creator=null;const c=await api('/api/creator?channel='+ch);
+  if(!c.connected){$('#creator').innerHTML=`<img alt=""><div><b>Not connected</b><span>${c.error||'Log in with TikTok, then paste the code'}</span></div>`;$('#connect').style.display=c.authUrl?'':'none';$('#authLink').href=c.authUrl||'#';validate();return;}
+  if(c.error){$('#creator').innerHTML=`<img alt=""><div><b class="err">Error</b><span>${c.error}</span></div>`;validate();return;}
+  creator=c;$('#connect').style.display='none';
+  $('#creator').innerHTML=`<img src="${c.creator_avatar_url||''}" alt=""><div><b>${c.creator_nickname}</b><span>@${c.creator_username} · posting to this account</span></div>`;
+  const p=$('#privacy');p.innerHTML='<option value="" disabled selected>Select</option>'+(c.privacy_level_options||[]).map(o=>`<option value="${o}">${({PUBLIC_TO_EVERYONE:'Everyone',MUTUAL_FOLLOW_FRIENDS:'Friends',FOLLOWER_OF_CREATOR:'Followers',SELF_ONLY:'Only me'})[o]||o}</option>`).join('');
+  for(const [id,dis] of [['allowComment',c.comment_disabled],['allowDuet',c.duet_disabled],['allowStitch',c.stitch_disabled]]){const el=$('#'+id);el.disabled=!!dis;el.checked=false;el.parentElement.style.opacity=dis?.45:1;}
+  validate();}
+async function loadVideos(){vids=await api('/api/videos?channel='+ch);sel=null;$('#list').innerHTML=vids.map(v=>`<div class="vid" data-f="${v.file}"><b>${v.title}</b><span>${v.file} · ${(v.size/1e6).toFixed(1)} MB</span></div>`).join('')||'<span class="hint">No videos in out/</span>';
+  document.querySelectorAll('.vid').forEach(d=>d.onclick=()=>{sel=vids.find(v=>v.file===d.dataset.f);document.querySelectorAll('.vid').forEach(x=>x.classList.toggle('sel',x===d));$('#preview').src=API_BASE+'/video/'+encodeURIComponent(sel.file);$('#title').value=sel.caption;$('#tlen').textContent=sel.caption.length;$('#status').style.display='none';validate();});}
+$('#authBtn').onclick=async()=>{const r=await api('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({channel:ch,code:$('#code').value})});if(r.error)alert(r.error);else{loadChannels();loadCreator();}};
+$('#title').oninput=()=>{$('#tlen').textContent=$('#title').value.length;validate();};
+$('#commercial').onchange=()=>{$('#commOpts').style.display=$('#commercial').checked?'':'none';commNote();validate();};
+$('#brandOrganic').onchange=$('#brandContent').onchange=()=>{commNote();validate();};
+$('#privacy').onchange=()=>{commNote();validate();};
+function commNote(){const o=$('#brandOrganic').checked,b=$('#brandContent').checked,on=$('#commercial').checked;
+  $('#commNote').textContent=!on?'':(o&&b)?'Your video will be labeled "Paid partnership".':b?'Your video will be labeled "Paid partnership".':o?'Your video will be labeled "Promotional content".':'Select at least one option.';
+  const self=$('#privacy').querySelector('option[value=SELF_ONLY]');if(self)self.disabled=on&&b;   // 브랜디드 콘텐츠는 '나만 보기' 불가
+  $('#consent').innerHTML=on&&b?`By posting, you agree to TikTok's <a href="${BRAND}" target="_blank">Branded Content Policy</a> and <a href="${MUSIC}" target="_blank">Music Usage Confirmation</a>.`:`By posting, you agree to TikTok's <a href="${MUSIC}" target="_blank">Music Usage Confirmation</a>.`;}
+commNote();
+function validate(){let why='';if(!creator)why='Connect a TikTok account';else if(!sel)why='Choose a video';else if(!$('#privacy').value)why='Select who can view';else if($('#commercial').checked&&!$('#brandOrganic').checked&&!$('#brandContent').checked)why='Select a disclosure option';else if($('#commercial').checked&&$('#brandContent').checked&&$('#privacy').value==='SELF_ONLY')why='Branded content cannot be "Only me"';
+  $('#post').disabled=!!why;$('#why').textContent=why;}
+$('#post').onclick=async()=>{$('#post').disabled=true;const st=$('#status');st.style.display='';st.innerHTML='Uploading…';
+  const r=await api('/api/post',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({channel:ch,file:sel.file,title:$('#title').value,privacy:$('#privacy').value,allowComment:$('#allowComment').checked,allowDuet:$('#allowDuet').checked,allowStitch:$('#allowStitch').checked,aigc:$('#aigc').checked,brandOrganic:$('#commercial').checked&&$('#brandOrganic').checked,brandContent:$('#commercial').checked&&$('#brandContent').checked})});
+  if(r.error){st.innerHTML=`<span class="err">Failed:</span> ${r.error}`;validate();return;}
+  st.innerHTML=`Uploaded. TikTok is processing your video (publish id ${r.publish_id})…`;
+  for(let i=0;i<60;i++){await new Promise(r=>setTimeout(r,5000));const s=await api(`/api/status?channel=${ch}&id=${encodeURIComponent(r.publish_id)}`);
+    if(s.status==='PUBLISH_COMPLETE'){const id=(s.publicaly_available_post_id||[])[0];st.innerHTML=`<span class="ok">Posted!</span> ${id?`<a href="https://www.tiktok.com/@${creator.creator_username}/video/${id}" target="_blank">Open on TikTok</a>`:'It will appear on your profile shortly.'}`;break;}
+    if(s.status==='FAILED'){st.innerHTML=`<span class="err">TikTok rejected the video:</span> ${s.fail_reason||''}`;break;}
+    st.innerHTML=`<span class="warn">${s.status||'PROCESSING'}</span> · checking again in 5s`;}
+  validate();};
+(async()=>{const q=new URLSearchParams(location.search);const code=q.get('code');if(code){const st=q.get('state')||'';ch=(st.split('-')[0]||ch);history.replaceState(null,'',location.pathname);const r=await api('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({channel:ch,code})});if(r.error)alert(r.error);}loadChannels();loadCreator();loadVideos();})();
+</script>
+</body>
+</html>
