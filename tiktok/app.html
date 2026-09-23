@@ -33,7 +33,7 @@ video{width:100%;max-height:420px;background:#000;border-radius:12px}
 </style>
 </head>
 <body>
-<header><div><h1>Post to TikTok</h1><div class="sub">Quiz Shorts Publisher · review, then publish a video to your own TikTok account</div></div></header>
+<header><div><h1>Post to TikTok</h1><div class="sub">Quiz Shorts Publisher · review, then publish a video to your own TikTok account · <span id="host" style="color:var(--acc)"></span></div></div></header>
 <main>
   <section class="card">
     <h2>1 · Account & video</h2>
@@ -82,6 +82,7 @@ video{width:100%;max-height:420px;background:#000;border-radius:12px}
 <script>
 const API_BASE='http://localhost:4394';
 const $=s=>document.querySelector(s);
+$('#host').textContent=location.host+location.pathname;
 const MUSIC='https://www.tiktok.com/legal/page/global/music-usage-confirmation/en',BRAND='https://www.tiktok.com/legal/page/global/bc-policy/en';
 let ch='nl',creator=null,sel=null,vids=[];
 const api=(p,o)=>fetch(API_BASE+p,o).then(r=>r.json()).catch(e=>({error:'Cannot reach the local publisher service on '+API_BASE+' — start it with: node tools/tt-review/server.js'}));
